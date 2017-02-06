@@ -48,13 +48,13 @@ public class FragmentNavigationController extends FragmentActivity {
                     | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
         }
     };
-    private View mControlsView;
-    private final Runnable mShowPart2Runnable = new Runnable() {
-        @Override
-        public void run() {
-            mControlsView.setVisibility(View.VISIBLE);
-        }
-    };
+//    private View mControlsView;
+//    private final Runnable mShowPart2Runnable = new Runnable() {
+//        @Override
+//        public void run() {
+//            mControlsView.setVisibility(View.VISIBLE);
+//        }
+//    };
     private boolean mVisible;
     private final Runnable mHideRunnable = new Runnable() {
         @Override
@@ -82,10 +82,10 @@ public class FragmentNavigationController extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_camera);
+        setContentView(R.layout.activity_fragment_fullscreen);
 
         mVisible = true;
-        mControlsView = findViewById(R.id.fullscreen_content_controls);
+//        mControlsView = findViewById(R.id.fullscreen_content_controls);
         mFragmentContentView = findViewById(R.id.fragment_container);
         mFragmentContentView.setOnTouchListener(mDelayHideTouchListener);
 
@@ -118,7 +118,7 @@ public class FragmentNavigationController extends FragmentActivity {
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
-        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+//        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
     }
 
     @Override
@@ -145,11 +145,11 @@ public class FragmentNavigationController extends FragmentActivity {
     }
 
     private void hide() {
-        mControlsView.setVisibility(View.GONE);
+//        mControlsView.setVisibility(View.GONE);
         mVisible = false;
 
         // Schedule a runnable to remove the status and navigation bar after a delay
-        mHideHandler.removeCallbacks(mShowPart2Runnable);
+//        mHideHandler.removeCallbacks(mShowPart2Runnable);
         mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
     }
 
@@ -162,7 +162,7 @@ public class FragmentNavigationController extends FragmentActivity {
 
         // Schedule a runnable to display UI elements after a delay
         mHideHandler.removeCallbacks(mHidePart2Runnable);
-        mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
+//        mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
     }
 
     /**

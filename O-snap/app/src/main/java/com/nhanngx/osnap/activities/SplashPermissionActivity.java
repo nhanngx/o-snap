@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
+import android.widget.Button;
 
 import com.nhanngx.osnap.R;
 
@@ -16,9 +18,12 @@ import com.nhanngx.osnap.R;
  */
 
 public class SplashPermissionActivity extends Activity {
-    private static final int PERMISSION_REQUEST_CAMERA = 0;
+    private Activity mActivity;
+    private int mCurrentRequestedPermission = 0;
 
-    private boolean shouldDisplayRequestSplash = false;
+    // Required permission constants
+    static final int PERMISSION_REQUIRED_CAMERA = 0;
+    static final int PERMISSION_REQUIRED_STORAGE = 1;
 
     // Splash delay in ms
     private static final int SPLASH_TIME = 3000;
@@ -27,6 +32,7 @@ public class SplashPermissionActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        mActivity = this;
     }
 
     @Override
@@ -34,43 +40,53 @@ public class SplashPermissionActivity extends Activity {
         super.onStart();
 
         // Check for permission
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.CAMERA)) {
-                shouldDisplayRequestSplash = true;
+        if (ifRequiredPermissionsMissing()) {
+            if (checkShouldShowRationale()) {
+                // Change splash screen to display rationale here.
+                // Camera permission is required for the app, so just exit otherwise.
+                doShowRationaleSplash();
             } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.CAMERA},
-                        PERMISSION_REQUEST_CAMERA);
+                doRequestPermissionRoutine();
             }
+        } else {
+            // Perform normal app starting routine.
+            doStartCameraActivityRoutine();
         }
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        if (mCurrentRequestedPermission == 2) {
+            mCurrentRequestedPermission = 0;
+            if (ifRequiredPermissionsMissing()) {
+                doShowRationaleSplash();
+            } else {
+                doStartCameraActivityRoutine();
+            }
+        } else {
+            doRequestPermissionRoutine();
+        }
+        // TODO: Handle optional permissions here case-by-case.
+    }
+
+    private void doShowRationaleSplash() {
+        setContentView(R.layout.activity_splash_request_camera);
+        Button requestPermissionBtn = (Button) findViewById(R.id.btn_request_permission_camera);
+        requestPermissionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doRequestPermissionRoutine();
+            }
+        });
+    }
+
+    private void doStartCameraActivityRoutine() {
         // Check for main camera view finished loading
 
-        if (shouldDisplayRequestSplash) {
-            // Change splash screen to display rationale here.
-            // Camera permission is required for the app, so just exit otherwise.
-            setContentView(R.layout.activity_splash_request_camera);
-
-        } else {
-            // Small delay for splash
-            new Handler().postDelayed(new Runnable(){
-                @Override
-                public void run() {
-                    // Change splash screen to display rationale here.
-                    // Camera permission is required for the app, so just exit otherwise.
-
-                    Intent cameraIntent = new Intent(getApplicationContext(), FragmentNavigationController.class);
-                    startActivity(cameraIntent);
-                    SplashPermissionActivity.this.finish();
-                }
-            }, SPLASH_TIME);
-        }
-
+        // here.
+        
+        // TODO: might wanna display a thank you message once the user allowed all permissions?
 
         // Small delay for splash
         new Handler().postDelayed(new Runnable(){
@@ -86,28 +102,41 @@ public class SplashPermissionActivity extends Activity {
         }, SPLASH_TIME);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSION_REQUEST_CAMERA: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+    private boolean ifRequiredPermissionsMissing() {
+        return (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+                || (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED);
+    }
 
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
+    private boolean checkShouldShowRationale() {
+        return (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA))
+                || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    }
 
+    private void doRequestPermissionRoutine() {
+        switch (mCurrentRequestedPermission) {
+            case 0:
+                mCurrentRequestedPermission++;
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.CAMERA},
+                            PERMISSION_REQUIRED_CAMERA);
                 } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+                    doRequestPermissionRoutine();
                 }
-                return;
-            }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
+                break;
+            case 1:
+                mCurrentRequestedPermission++;
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            PERMISSION_REQUIRED_STORAGE);
+                    return;
+                } else {
+                    doRequestPermissionRoutine();
+                }
+                break;
+            case 2:
+                break;
         }
     }
 }

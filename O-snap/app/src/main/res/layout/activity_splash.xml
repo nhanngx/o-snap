@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:src="@color/colorAccent">
-
-</ImageView>
+    android:background="@color/colorAccent">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This is the welcoming splash screen. Gotta figure out the intuition and logic for splash else it will feel like a nuisance every time the user opens the app."/>
+</LinearLayout>
