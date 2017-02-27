@@ -15,10 +15,11 @@ import com.nhanngx.osnap.R;
 
 /**
  * Created by nhanngx on 04-Feb-17.
+ * Activity that welcomes the user at app launch
+ * and handles acquiring permissions.
  */
 
 public class SplashPermissionActivity extends Activity {
-    private Activity mActivity;
     private int mCurrentRequestedPermission = 0;
 
     // Required permission constants
@@ -26,13 +27,12 @@ public class SplashPermissionActivity extends Activity {
     static final int PERMISSION_REQUIRED_STORAGE = 1;
 
     // Splash delay in ms
-    private static final int SPLASH_TIME = 3000;
+    private static final int SPLASH_TIME = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        mActivity = this;
     }
 
     @Override
@@ -95,7 +95,7 @@ public class SplashPermissionActivity extends Activity {
                 // Change splash screen to display rationale here.
                 // Camera permission is required for the app, so just exit otherwise.
 
-                Intent cameraIntent = new Intent(getApplicationContext(), FragmentNavigationController.class);
+                Intent cameraIntent = new Intent(getApplicationContext(), CameraActivity.class);
                 startActivity(cameraIntent);
                 SplashPermissionActivity.this.finish();
             }

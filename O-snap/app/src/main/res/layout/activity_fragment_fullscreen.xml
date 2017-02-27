@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#000000"
-    tools:context="com.nhanngx.osnap.activities.FragmentNavigationController">
+    tools:context="com.nhanngx.osnap.activities.CameraActivity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
     is needed to present your content, e.g. VideoView, SurfaceView,
