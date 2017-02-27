@@ -9,20 +9,11 @@ import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.nhanngx.osnap.fragments.CameraFragment;
+import com.nhanngx.osnap.ui.fragments.CameraFragment;
 import com.nhanngx.osnap.R;
 
-public class FragmentNavigationController extends FragmentActivity {
-    /**
-     * Whether or not the system UI should be auto-hidden after
-     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-     */
+public class CameraActivity extends FragmentActivity {
     private static final boolean AUTO_HIDE = true;
-
-    /**
-     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
-     * user interaction before hiding the system UI.
-     */
     private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
 
     /**
@@ -109,7 +100,7 @@ public class FragmentNavigationController extends FragmentActivity {
             }
 
             // Inflate the default camera fragment
-            mFragmentManager = FragmentNavigationController.this.getSupportFragmentManager();
+            mFragmentManager = CameraActivity.this.getSupportFragmentManager();
             FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
             mFragmentTransaction.add(R.id.fragment_container, new CameraFragment());
             mFragmentTransaction.commit();
