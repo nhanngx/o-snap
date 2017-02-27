@@ -24,7 +24,8 @@
         <ImageButton
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@color/colorPrimary" />
+            android:src="@color/colorPrimary"
+            android:id="@+id/switch_camera"/>
     </LinearLayout>
 
     <LinearLayout

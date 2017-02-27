@@ -32,11 +32,11 @@ public class CameraFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (!getContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-            // system detects no camera, display error toast and/or close app here.
-        }
+//        TODO: implement this.
+//        if (!getContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+//            // system detects no camera, display error toast and/or close app here.
+//        }
 
-        // init member variables
         mActivity = getActivity();
 
         // init layout elements
@@ -64,6 +64,16 @@ public class CameraFragment extends Fragment {
         mCameraController = CameraController.getInstance(mActivity);
         mPreviewFrameLayout = (FrameLayout) rootView.findViewById(R.id.camera_preview);
 
+        ImageButton switchCameraButton = (ImageButton) rootView.findViewById(R.id.switch_camera);
+        switchCameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCamera.stopPreview();
+                mCameraController.releaseCamera();
+                mCamera = mCameraController.getNextCamera();
+                resetCameraPreview();
+            }
+        });
         ImageButton captureButton = (ImageButton) rootView.findViewById(R.id.capture_button);
         captureButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,17 +90,20 @@ public class CameraFragment extends Fragment {
 
         // get camera object to create preview
         mCamera = mCameraController.getCurrentCamera();
-
-        // Create our Preview view and set it as the content of our activity.
-        mCameraPreview = new CameraPreviewLayout(getContext(), mCamera);
-        mPreviewFrameLayout.removeAllViews();
-        mPreviewFrameLayout.addView(mCameraPreview);
-        mCameraController.setCameraDisplayOrientation(mCamera);
+        resetCameraPreview();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mCameraController.releaseCamera();
+    }
+
+    private void resetCameraPreview() {
+        // Create our Preview view and set it as the content of our activity.
+        mCameraPreview = new CameraPreviewLayout(getContext(), mCamera);
+        mPreviewFrameLayout.removeAllViews();
+        mPreviewFrameLayout.addView(mCameraPreview);
+        mCameraController.setCameraDisplayOrientation(mCamera);
     }
 }
