@@ -149,6 +149,8 @@ public class CameraController {
     public void capturePhoto() {
         // TODO: Populate first param to set up capture animation
         mCamera.takePicture(null, null, mPicture);
+        mCamera.stopPreview();
+        mCamera.startPreview();
     }
 
     /** Create a File for saving an image or video */
@@ -175,13 +177,17 @@ public class CameraController {
         if (type == MEDIA_TYPE_IMAGE){
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
                     "IMG_"+ timeStamp + ".jpg");
-        } else if(type == MEDIA_TYPE_VIDEO) {
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                    "VID_"+ timeStamp + ".mp4");
         } else {
             return null;
         }
 
         return mediaFile;
+    }
+
+    public void releaseCamera(){
+        if (mCamera != null){
+            mCamera.release();        // release the camera for other applications
+            mCamera = null;
+        }
     }
 }

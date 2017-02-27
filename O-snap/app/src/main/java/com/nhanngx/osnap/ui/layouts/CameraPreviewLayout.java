@@ -20,7 +20,6 @@ import java.io.IOException;
 
 public class CameraPreviewLayout extends SurfaceView implements SurfaceHolder.Callback {
     public static final String TAG = "CameraPreviewLayout";
-    private int mSquareDimension;
 
     SurfaceHolder mHolder;
     Camera mCamera;
@@ -55,8 +54,6 @@ public class CameraPreviewLayout extends SurfaceView implements SurfaceHolder.Ca
         try {
             mCamera.setPreviewDisplay(holder);
             Camera.Parameters squareParams = mCamera.getParameters();
-            squareParams.setPictureSize(mSquareDimension, mSquareDimension);
-            squareParams.setPreviewSize(mSquareDimension, mSquareDimension);
             mCamera.startPreview();
         } catch (IOException e) {
             Log.d(TAG, "Error setting camera preview: " + e.getMessage());
