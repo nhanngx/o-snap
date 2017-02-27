@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.hardware.Camera;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import com.nhanngx.osnap.R;
@@ -44,6 +46,7 @@ public class CameraFragment extends Fragment {
         View headerView = rootView.findViewById(R.id.camera_header);
         View footerView = rootView.findViewById(R.id.camera_footer);
 
+        // Measuring and setting display params to create the square preview matching all screen sizes.
         // All display params are set to support ONLY portrait orientation.
         Display defaultDisplay = mActivity.getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -68,6 +71,14 @@ public class CameraFragment extends Fragment {
         mCameraPreview = new CameraPreviewLayout(getContext(), mCamera);
         FrameLayout preview = (FrameLayout) rootView.findViewById(R.id.camera_preview);
         preview.addView(mCameraPreview);
+
+        ImageButton captureButton = (ImageButton) rootView.findViewById(R.id.capture_button);
+        captureButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCameraController.capturePhoto();
+            }
+        });
         return rootView;
     }
 
